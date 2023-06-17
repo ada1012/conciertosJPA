@@ -51,6 +51,11 @@ public class ServiceImpl implements Service {
             throw new IncidentException(IncidentError.NOT_EXIST_MUSIC_GROUP.getText(), IncidentError.NOT_EXIST_MUSIC_GROUP);
         }
         
+        if (!new Date(concierto.getFecha().getTime()).equals(fecha)) {
+        	entityManager.getTransaction().rollback();
+            throw new IncidentException(IncidentError.NOT_EXIST_CONCERT.getText(), IncidentError.NOT_EXIST_CONCERT);
+        }
+        
         if (concierto.getTickets() < tickets) {
             entityManager.getTransaction().rollback();
             throw new IncidentException(IncidentError.NOT_AVAILABLE_TICKETS.getText(), IncidentError.NOT_AVAILABLE_TICKETS);
