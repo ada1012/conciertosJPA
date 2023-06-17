@@ -347,13 +347,13 @@ public class TestClient {
 	private static void consultarGruposUsandoGrafo(Service implService) {
 		try {
 			System.out.println("Información completa con grafos de entidades...");
-			List<Grupo> grupos = implService.consultarGrupos();		
+			List<Grupo> grupos = implService.consultarGrupos();
 			for (Grupo grupo : grupos) {
 				System.out.println(grupo.toString());
-				List<Concierto> conciertos = grupo.getConciertos();
+				Set<Concierto> conciertos = grupo.getConciertos();
 				for (Concierto concierto : conciertos) {
 					System.out.println("\t" + concierto.toString());
-					List<Compra> compras = concierto.getCompras();
+					Set<Compra> compras = concierto.getCompras();
 					for (Compra compra : compras) {
 						System.out.println("\t\t" + compra.toString());
 						Cliente cliente = compra.getCliente();
