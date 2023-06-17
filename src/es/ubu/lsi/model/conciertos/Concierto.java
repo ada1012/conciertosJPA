@@ -3,7 +3,7 @@ package es.ubu.lsi.model.conciertos;
 import java.io.Serializable;
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -30,7 +30,7 @@ public class Concierto implements Serializable {
 
 	//bi-directional many-to-one association to Compra
 	@OneToMany(mappedBy="concierto")
-	private List<Compra> compras;
+	private Set<Compra> compras;
 
 	//bi-directional many-to-one association to Grupo
 	@ManyToOne
@@ -88,11 +88,11 @@ public class Concierto implements Serializable {
 		this.tickets = tickets;
 	}
 
-	public List<Compra> getCompras() {
+	public Set<Compra> getCompras() {
 		return this.compras;
 	}
 
-	public void setCompras(List<Compra> compras) {
+	public void setCompras(Set<Compra> compras) {
 		this.compras = compras;
 	}
 

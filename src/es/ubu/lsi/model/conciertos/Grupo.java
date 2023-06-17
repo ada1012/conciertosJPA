@@ -3,7 +3,7 @@ package es.ubu.lsi.model.conciertos;
 import java.io.Serializable;
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -11,6 +11,20 @@ import java.util.List;
  * 
  */
 @Entity
+@NamedEntityGraph(
+    name = "grupo-conciertos-compras",
+    attributeNodes = {
+        @NamedAttributeNode(value = "conciertos", subgraph = "conciertos-compras")
+    },
+    subgraphs = {
+        @NamedSubgraph(
+            name = "conciertos-compras",
+            attributeNodes = {
+                @NamedAttributeNode("compras")
+            }
+        )
+    }
+)
 @NamedQuery(name="Grupo.findAll", query="SELECT g FROM Grupo g")
 public class Grupo implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -26,7 +40,7 @@ public class Grupo implements Serializable {
 
 	//bi-directional many-to-one association to Concierto
 	@OneToMany(mappedBy="grupo")
-	private List<Concierto> conciertos;
+	private Set<Concierto> conciertos;
 
 	public Grupo() {
 	}
@@ -63,11 +77,11 @@ public class Grupo implements Serializable {
 		this.nombre = nombre;
 	}
 
-	public List<Concierto> getConciertos() {
+	public Set<Concierto> getConciertos() {
 		return this.conciertos;
 	}
 
-	public void setConciertos(List<Concierto> conciertos) {
+	public void setConciertos(Set<Concierto> conciertos) {
 		this.conciertos = conciertos;
 	}
 
