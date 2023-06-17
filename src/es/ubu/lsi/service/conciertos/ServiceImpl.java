@@ -10,9 +10,12 @@ import es.ubu.lsi.model.conciertos.Grupo;
 import es.ubu.lsi.model.conciertos.Cliente;
 import es.ubu.lsi.service.PersistenceException;
 
+import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
+
 import java.util.Date;
 import java.util.List;
 
@@ -93,22 +96,18 @@ public class ServiceImpl implements Service {
 
         entityManager.getTransaction().commit();
     }
-
+    
     public List<Grupo> consultarGrupos() throws PersistenceException {
         try {
             entityManager.getTransaction().begin();
 
-            List<Grupo> grupos = grupoDAO.findAll();
+            EntityGraph<Grupo> entityGraph = entityManager.createEntityGraph(Grupo.class);
+            entityGraph.addSubgraph("conciertos").addSubgraph("compras");
 
-            for (Grupo grupo : grupos) {
-                // Cargar los conciertos asociados al grupo
-                grupo.setConciertos(conciertoDAO.findAllByGrupo(grupo));
+            TypedQuery<Grupo> query = entityManager.createQuery("SELECT g FROM Grupo g", Grupo.class);
+            query.setHint("javax.persistence.fetchgraph", entityManager.getEntityGraph("grupo-conciertos-compras"));
 
-                for (Concierto concierto : grupo.getConciertos()) {
-                    // Cargar las compras asociadas al concierto
-                    concierto.setCompras(compraDAO.findAllByConcierto(concierto));
-                }
-            }
+            List<Grupo> grupos = query.getResultList();
 
             entityManager.getTransaction().commit();
 
